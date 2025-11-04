@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PSX Technical Dashboard</title>
+    <style>
+        body { font-family: Arial; margin: 40px; background: #f8f8f8; }
+        h2 { color: #333; }
+        table { border-collapse: collapse; width: 100%; background: white; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background: #222; color: #fff; }
+        input { padding: 8px; width: 200px; }
+        button { padding: 8px 12px; margin-left: 4px; }
+    </style>
+</head>
+<body>
+    <h2>📊 PSX Technicals Dashboard</h2>
+
+    <form method="get">
+        <input type="text" name="q" placeholder="Search by symbol (e.g. EFERT)" value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <br>
+    <table>
+        <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>RSI</th>
+            <th>MA 10</th>
+            <th>MA 30</th>
+            <th>MA 60</th>
+            <th>MACD Daily</th>
+            <th>MACD Weekly</th>
+            <th>Support 1</th>
+            <th>Support 2</th>
+            <th>Resistance 1</th>
+            <th>Resistance 2</th>
+        </tr>
+
+        {% for row in data %}
+        <tr>
+            <td>{{ row.symbol }}</td>
+            <td>{{ row.market_price }}</td>
+            <td>{{ row.rsi }}</td>
+            <td>{{ row.ma_10 }}</td>
+            <td>{{ row.ma_30 }}</td>
+            <td>{{ row.ma_60 }}</td>
+            <td>{{ row.macd_daily }}</td>
+            <td>{{ row.macd_weekly }}</td>
+            <td>{{ row.support1 }}</td>
+            <td>{{ row.support2 }}</td>
+            <td>{{ row.resistance1 }}</td>
+            <td>{{ row.resistance2 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

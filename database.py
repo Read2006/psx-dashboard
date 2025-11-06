@@ -1,10 +1,17 @@
+import os
+import datetime
 from sqlalchemy import create_engine, Column, Integer, String, Float, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import datetime
+
+# Use DATABASE_URL from environment (Render)
+DATABASE_URL = os.environ.get(
+    "DATABASE_URL",
+    "postgresql+psycopg2://postgres:%23Usman20069292006@db.ppklfyvxxtjwnrweuihk.supabase.co:5432/postgres"
+)
 
 # Create database engine
-engine = create_engine("sqlite:///stocks.db", connect_args={"check_same_thread": False})
+engine = create_engine(DATABASE_URL, echo=False)
 
 # Setup base and session
 Base = declarative_base()

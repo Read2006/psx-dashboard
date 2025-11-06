@@ -1,3 +1,4 @@
+import os
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -6,8 +7,6 @@ from database import SessionLocal, StockSnapshot
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64)"}
 
-
-# 🧩 Safely convert text -> float
 def to_float(x):
     if not x:
         return None
@@ -17,11 +16,10 @@ def to_float(x):
         m = re.search(r"[-+]?\d*\.?\d+", str(x))
         return float(m.group(0)) if m else None
 
-
-# 🧱 Load all symbols from file
 def get_all_symbols():
     try:
-        with open("symbols.txt") as f:
+        symbols_path = os.path.join(os.path.dirname(__file__), "symbols.txt")
+        with open(symbols_path) as f:
             symbols = [line.strip().upper() for line in f if line.strip()]
         print(f"✅ Loaded {len(symbols)} symbols from symbols.txt")
         return symbols
@@ -29,8 +27,6 @@ def get_all_symbols():
         print("❌ symbols.txt file not found! Please create it in the project folder.")
         return []
 
-
-# 🧠 Parse a single company's snapshot HTML
 def parse_snapshot(html, symbol):
     soup = BeautifulSoup(html, "html.parser")
 
@@ -54,8 +50,6 @@ def parse_snapshot(html, symbol):
     }
     return data
 
-
-# ⚙️ Main scraper
 def main():
     symbols = get_all_symbols()
     db = SessionLocal()
@@ -71,8 +65,6 @@ def main():
                 continue
 
             parsed = parse_snapshot(r.text, symbol)
-
-            # 🧩 Check if record already exists
             existing = db.query(StockSnapshot).filter_by(symbol=symbol).first()
             if existing:
                 for key, value in parsed.items():
@@ -87,12 +79,12 @@ def main():
         except Exception as e:
             print(f"⚠️ Error fetching {symbol}: {e}")
 
-        time.sleep(1.5)  # polite delay
+        time.sleep(1.5)
 
     db.close()
     print("\n🏁 Done scraping all companies!")
 
-
 if __name__ == "__main__":
     main()
+
 
